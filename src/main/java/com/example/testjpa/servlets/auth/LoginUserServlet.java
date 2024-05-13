@@ -20,6 +20,7 @@ public class LoginUserServlet extends HttpServlet {
         UserRepo userRepo = new UserRepo();
         HttpSession session = req.getSession();
         User user = userRepo.findByEmailAndPassword(email, password);
+        System.out.println(user);
         if (user != null) {
             session.setAttribute("user", user);
             resp.sendRedirect("/");

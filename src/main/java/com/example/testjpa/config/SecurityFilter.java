@@ -18,7 +18,8 @@ public class SecurityFilter implements Filter {
                     "/static/bootstrap.min.css",
                     "/home/group.jsp",
                     "/home/student.jsp",
-                    "/auth/login.jsp"
+                    "/auth/login.jsp",
+                    "/auth/login"
             )
     );
 
