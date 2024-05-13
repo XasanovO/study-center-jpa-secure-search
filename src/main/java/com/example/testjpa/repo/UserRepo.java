@@ -24,6 +24,6 @@ public class UserRepo extends BaseRepo<User, Integer> {
             transaction.rollback();
             e.printStackTrace();
         }
-        throw new RuntimeException("failed to find user by email and password");
+        return null;
     }
 }

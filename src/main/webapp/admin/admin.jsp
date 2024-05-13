@@ -1,5 +1,10 @@
 <%@ page import="com.example.testjpa.entity.User" %>
-<%@ page import="com.example.testjpa.entity.enums.Role" %><%--
+<%@ page import="com.example.testjpa.entity.enums.Role" %>
+<%@ page import="com.example.testjpa.repo.GroupRepo" %>
+<%@ page import="com.example.testjpa.repo.StudentRepo" %>
+<%@ page import="com.example.testjpa.entity.Group" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.example.testjpa.entity.Student" %><%--
   Created by IntelliJ IDEA.
   User: ox121
   Date: 12.05.2024
@@ -15,6 +20,10 @@
 <body>
 <%
     User currentUser = (User) session.getAttribute("user");
+    GroupRepo groupRepo = new GroupRepo();
+    StudentRepo studentRepo = new StudentRepo();
+    List<Group> groups = groupRepo.findAll();
+    List<Student> students = studentRepo.findAll();
 %>
 
 <div class="row">
@@ -31,6 +40,24 @@
                 <td>Action</td>
             </tr>
             </thead>
+
+            <tbody>
+            <%for (Group group : groups) {%>
+            <tr>
+                <td><%=group.getId()%></td>
+                <td><%=group.getName()%></td>
+                <td>
+                    <a href="addGroup.jsp?id=<%=group.getId()%>">
+                        <button class="btn btn-info">edit</button>
+                    </a>
+
+                    <a href="/group/delete?id=<%=group.getId()%>">
+                        <button class="btn btn-danger">delete</button>
+                    </a>
+                </td>
+            </tr>
+            <%}%>
+            </tbody>
         </table>
     </div>
     <%if (currentUser != null && currentUser.getRole().equals(Role.ADMIN)) {%>
@@ -40,7 +67,7 @@
     <%}%>
     <div class="col-5">
         <h1 class="bg-dark form-control text-center text-white">Students</h1>
-        <a href="/admin/addStudnet.jsp">
+        <a href="/admin/addStudent.jsp">
             <button class="btn btn-dark">Add Student</button>
         </a>
         <table class="table table-striped">
@@ -53,6 +80,24 @@
                 <td>Action</td>
             </tr>
             </thead>
+            <tbody>
+            <%for (Student student : students) {%>
+            <tr>
+                <td><%=student.getId()%></td>
+                <td><%=student.getFirstName()%></td>
+                <td><%=student.getLastName()%></td>
+                <td><%=student.getGroup().getName()%></td>
+                <td>
+                    <a href="addStudent.jsp?id=<%=student.getId()%>">
+                        <button class="btn btn-info">edit</button>
+                    </a>
+                    <a href="/student/delete?id=<%=student.getId()%>">
+                        <button class="btn btn-danger">delete</button>
+                    </a>
+                </td>
+            </tr>
+            <%}%>
+            </tbody>
         </table>
     </div>
 </div>

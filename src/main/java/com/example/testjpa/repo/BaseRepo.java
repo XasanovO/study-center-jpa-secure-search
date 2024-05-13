@@ -1,6 +1,7 @@
 package com.example.testjpa.repo;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.EntityTransaction;
 
 import java.lang.reflect.ParameterizedType;
@@ -19,12 +20,35 @@ public class BaseRepo<Type, ID> {
 
     public void save(Type entity) {
         EntityManager entityManager = emf.createEntityManager();
-        entityManager.persist(entity);
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            entityManager.persist(entity);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
     }
 
     public void delete(ID id) {
         EntityManager entityManager = emf.createEntityManager();
-        entityManager.remove(entityManager.find(typeClass, id));
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            Type type = entityManager.find(typeClass, id);
+            if (type != null) {
+                entityManager.remove(type);
+            }
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+            e.printStackTrace();
+        }
     }
 
     public Type findById(ID id) {
@@ -42,13 +66,13 @@ public class BaseRepo<Type, ID> {
         throw new RuntimeException("couldn't find entity with id: " + id);
     }
 
-    public void update(Type entity, ID id) {
+    public void update(Type entity) {
         EntityManager entityManager = emf.createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            Type type = entityManager.find(typeClass, id);
             entityManager.merge(entity);
+            transaction.commit();
         } catch (Exception e) {
             transaction.rollback();
             e.printStackTrace();
