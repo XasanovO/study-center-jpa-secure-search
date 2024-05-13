@@ -1,5 +1,9 @@
 <%@ page import="com.example.testjpa.entity.User" %>
-<%@ page import="com.example.testjpa.entity.enums.Role" %><%--
+<%@ page import="com.example.testjpa.entity.enums.Role" %>
+<%@ page import="com.example.testjpa.repo.StudentRepo" %>
+<%@ page import="com.example.testjpa.entity.Student" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %><%--
   Created by IntelliJ IDEA.
   User: ox121
   Date: 12.05.2024
@@ -14,6 +18,12 @@
 </head>
 <%
     User currentUser = (User) session.getAttribute("user");
+    String search = request.getParameter("search");
+    StudentRepo studentRepo = new StudentRepo();
+    List<Student> students = studentRepo.findAll();
+    if (search != null) {
+       students = studentRepo.findStudentsByName(search);
+    }
 %>
 <body>
 <div class="row">
@@ -39,7 +49,7 @@
         <%}%>
         <h1 class="text-center bg-dark text-white">students</h1>
         <form>
-            <input class="form-control" type="text" name="search">
+            <input class="form-control" value="<%=search != null? search:""%>" type="text" name="search">
             <button class="btn btn-success">search</button>
         </form>
         <table class="table table-striped">
@@ -49,12 +59,17 @@
                 <td>FirstName</td>
                 <td>LastName</td>
                 <td>Group</td>
-                <td>Action</td>
             </tr>
             </thead>
-
             <tbody>
-
+                <% for (Student student : students) { %>
+                    <tr>
+                        <td><%=student.getId()%></td>
+                        <td><%=student.getFirstName()%></td>
+                        <td><%=student.getLastName()%></td>
+                        <td><%=student.getGroup().getName()%></td>
+                    </tr>
+                <%}%>
             </tbody>
 
         </table>

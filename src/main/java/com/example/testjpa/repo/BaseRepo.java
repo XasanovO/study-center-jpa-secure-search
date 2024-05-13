@@ -57,7 +57,7 @@ public class BaseRepo<Type, ID> {
 
     public List<Type> findAll() {
         EntityManager entityManager = emf.createEntityManager();
-        return entityManager.createQuery("from " + typeClass + " t", typeClass).getResultList();
+        return entityManager.createQuery("from " + typeClass.getSimpleName() + " t", typeClass).getResultList();
     }
 
 }
