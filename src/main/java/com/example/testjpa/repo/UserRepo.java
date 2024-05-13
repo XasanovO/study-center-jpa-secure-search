@@ -3,7 +3,6 @@ package com.example.testjpa.repo;
 import com.example.testjpa.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Query;
 
 import static com.example.testjpa.config.MyListener.emf;
 
